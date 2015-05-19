@@ -6,12 +6,15 @@ package com.smarthome.player;
 import com.smarthome.smarthome.R;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 /**
@@ -24,6 +27,8 @@ public class VideoPlayer extends Activity{
     private Button btnPause, btnPlay, btnStop;  
     private VPlayer vplayer;
     private SeekBar skbProgress;  
+    private PackageManager pm;
+    private ProgressDialog progressBar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,14 @@ public class VideoPlayer extends Activity{
         skbProgress = (SeekBar) this.findViewById(R.id.skbProgress);  
         skbProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
         
-        vplayer = new VPlayer(surfaceView, skbProgress); 
+        pm = getPackageManager();
+        
+        progressBar = new ProgressDialog(this);
+         
+        
+        vplayer = new VPlayer(surfaceView, skbProgress, pm, progressBar); 
+        
+       
 	}
 	
 	class ClickEvent implements OnClickListener {  
@@ -54,7 +66,8 @@ public class VideoPlayer extends Activity{
             if (arg0 == btnPlay) {
             	//String url="http://daily3gp.com/vids/family_guy_penis_car.3gp";
             	//String url = "http://imgWNAS0WNAS5WNASgd0.m3wscdn-h.kukuplay.com/ts/380789_1361124906157_1368438620253/playlist.m3u8";
-            	String url = "http://m3u8.uusee.com/53/4A/534AD157-0000-0000-FFFF-FFFFFFFFFF14_ts_live.m3u8"; 
+            	//String url = "http://m3u8.uusee.com/53/4A/534AD157-0000-0000-FFFF-FFFFFFFFFF14_ts_live.m3u8"; 
+            	String url = "http://www.androidbook.com/akc/filestorage/android/documentfiles/3389/movie.mp4";
             	//String url = "/mnt/sdcard/test.mp4";//= "http://v.yinyuetai.com/video/2278949";
             	
             	vplayer.play(url); 

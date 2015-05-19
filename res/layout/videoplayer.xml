@@ -31,7 +31,7 @@
                 android:id="@+id/skbProgress" 
                 android:max="100">
             </SeekBar>  
-        </LinearLayout>   
+        </LinearLayout>  
         
 	    <!-- 按钮 -->
 	    <LinearLayout android:orientation="horizontal"         

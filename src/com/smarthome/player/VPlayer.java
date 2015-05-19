@@ -7,17 +7,23 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.ProgressDialog;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
+import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 /**
@@ -33,19 +39,29 @@ public class VPlayer implements OnBufferingUpdateListener,
 	private SurfaceHolder surfaceHolder;
 	public  MediaPlayer mediaPlayer;  
 	private SeekBar skbProgress;
+	private PackageManager pm;
+	private ProgressDialog progressBar;
 	
 	private boolean mIsVideoSizeKnown = false;
 	private boolean mIsVideoReadyToBePlayed = false;
 	
 	private Timer mTimer = new Timer();
 	
-	public VPlayer(SurfaceView surfaceView, SeekBar skbProgress) {
+	private long new_KB, old_KB;
+	
+	public VPlayer(SurfaceView surfaceView, SeekBar skbProgress, 
+			PackageManager pm, ProgressDialog progressBar) {
 		
+		this.pm = pm;
 		this.skbProgress = skbProgress;
+		this.progressBar = progressBar;  		
+		
 		surfaceHolder = surfaceView.getHolder();
 		surfaceHolder.addCallback(this);
 		//surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		mTimer.schedule(mTimerTask, 0, 1000);
+		
+		this.progressBar.show();
 	}
 	
 	public void play(String videoUrl) {
@@ -56,6 +72,9 @@ public class VPlayer implements OnBufferingUpdateListener,
 			mediaPlayer.prepareAsync();			
 			mediaPlayer.setScreenOnWhilePlaying(true);
 			//mediaPlayer.start();
+			
+			
+			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,19 +109,36 @@ public class VPlayer implements OnBufferingUpdateListener,
 			if (mediaPlayer.isPlaying() && skbProgress.isPressed() == false) {
 				handleProgress.sendEmptyMessage(0);
 			}
+			
+			new_KB = getUidRxBytes() - old_KB;
+            old_KB = getUidRxBytes();
+            //System.out.println("++++++++++++++++++++++++++++"+s_KB);
+            Message msg = new Message();
+            msg.what = 1;
+            msg.obj = new_KB;
+            handleProgress.sendMessage(msg);
 		}
 	};
 	
 	Handler handleProgress = new Handler() {  
         public void handleMessage(Message msg) {  
-  
-            int position = mediaPlayer.getCurrentPosition();  
-            int duration = mediaPlayer.getDuration();  
-              
-            if (duration > 0) {  
-                long pos = skbProgress.getMax() * position / duration;  
-                skbProgress.setProgress((int) pos);  
-            }  
+        	switch(msg.what)
+        	{
+        	case 0:
+            	int position = mediaPlayer.getCurrentPosition();  
+	            int duration = mediaPlayer.getDuration();  
+	              
+	            if (duration > 0) {  
+	                long pos = skbProgress.getMax() * position / duration;  
+	                skbProgress.setProgress((int) pos);  
+	            }
+	        break;
+        	case 1: 
+        	long s_KB =(Long) msg.obj;
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+s_KB);
+            progressBar.setMessage("视频加载中("+s_KB+"K/S)...");
+        		break;
+        	}
         };  
     };  
 	
@@ -220,5 +256,19 @@ public class VPlayer implements OnBufferingUpdateListener,
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			mp.start();
 		}
+	}
+	
+	public long getUidRxBytes() { // 获取总的接受字节数，包含Mobile和WiFi等
+		
+		ApplicationInfo ai = null;
+		try {
+			ai = pm.getApplicationInfo("com.smarthome.smarthome",
+					PackageManager.GET_ACTIVITIES);
+		} catch (NameNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return TrafficStats.getUidRxBytes(ai.uid) == TrafficStats.UNSUPPORTED ? 0
+				: (TrafficStats.getTotalRxBytes() / 1024);
 	}
 }
