@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- whole app -->
+    <string name="app_name">SmartHome</string>
+    <string name="videoplayer">VideoPlayer</string>    
+    
+    <!-- MainActivity -->
+    <string name="video">PlayVideo</string>
+    
+    <!-- VideoPlayer -->
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+    
+   
+
+</resources>
+
