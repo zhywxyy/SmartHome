@@ -1,62 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    
-    <!-- 视频播放界面 -->
 
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    <!-- 视频播放界面 -->
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="184dp" >
+    </VideoView>
 
-    </SurfaceView>
+    <!-- 拖动条  -->
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"           
+        android:layout_marginTop="100dp"
+        android:max="100"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" />
     
-    <LinearLayout android:layout_height="wrap_content"  
-        android:layout_width="fill_parent" 
-        android:layout_gravity="bottom"  
-        android:orientation="vertical">
-        
-        <!-- 进度条 -->
-	    <LinearLayout android:orientation="horizontal"  
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content"  
-            android:layout_marginBottom="20dip">  
-            <SeekBar android:paddingRight="10dip" 
-                android:layout_gravity="center_vertical"  
-                android:paddingLeft="10dip" 
-                android:layout_weight="1.0"  
-                android:layout_height="wrap_content" 
-                android:layout_width="0dp"  
-                android:id="@+id/skbProgress" 
-                android:max="100">
-            </SeekBar>  
-        </LinearLayout>  
-        
-	    <!-- 按钮 -->
-	    <LinearLayout android:orientation="horizontal"         
-	        android:layout_height="wrap_content" 
-	        android:layout_width="wrap_content"
-	        android:layout_gravity="center_horizontal">
-	
-	        <Button
-	            android:id="@+id/btnPlay"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/play" />
-	  
-	        <Button android:id="@+id/btnPause"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"              
-	            android:text="@string/pause">
-	        </Button>  
-	        <Button android:id="@+id/btnStop"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"             
-	            android:text="@string/stop">
-	        </Button>  
-	    </LinearLayout>
-	  
-     </LinearLayout>
-  
-</FrameLayout>
+    <!-- 按钮 -->
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:orientation="horizontal" 
+        android:layout_alignBottom="@+id/videoView">
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"             
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="98dp"           
+            android:text="@string/play" />
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"           
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="98dp"             
+            android:text="@string/pause" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="184dp"
+            android:text="@string/stop" />
+    </RelativeLayout>
+ 
+</RelativeLayout>
