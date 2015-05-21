@@ -72,40 +72,48 @@ public class VideoPlayer extends Activity{
          
         mTimer.schedule(mTimerTask, 0, 1000);
         
+        playVideo();
         
+	}
+	
+	void playVideo()
+	{
+		//String url = "http://www.androidbook.com/akc/filestorage/android/documentfiles/3389/movie.mp4";
+    	// 山东卫视
+    	String url = "http://61.155.130.204/live/14?key=-zoHLEBota08DWaDuk6lsERV1h_xADTA&ver=seg&n=1&a=4914&cip=222.73.92.52";
+    	// 欢视网民视
+    	//String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-01.m3u8";
+    	// 欢视网台视
+    	//String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-02.m3u8";
+    	// 欢视网中视
+    	//String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-03.m3u8";
+    	// 华视HD
+    	// String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-04.m3u8";
+    	//公视HD
+    	// String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-05.m3u8";
+    	//民视新闻台HD
+    	// String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-06.m3u8";
+    	
+    	//String url = "http://199.195.195.108:32001";
+    	
+    	Uri uri = Uri.parse(url);
+    	
+    	videoView.setVideoURI(uri);	
+    	videoView.requestFocus();
+    	videoView.start();  
+    	
+    	progressBar.show();
 	}
 	
 	class ClickEvent implements OnClickListener {  		  
         @Override  
         public void onClick(View arg0) {  
-            if (arg0 == btnPlay) {
-            	
-            	//String url = "http://www.androidbook.com/akc/filestorage/android/documentfiles/3389/movie.mp4";
-            	// 山东卫视
-            	//String url = "http://61.155.130.204/live/14?key=-zoHLEBota08DWaDuk6lsERV1h_xADTA&ver=seg&n=1&a=4914&cip=222.73.92.52";
-            	// 欢视网民视
-            	//String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-01.m3u8";
-            	// 欢视网台视
-            	//String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-02.m3u8";
-            	// 欢视网中视
-            	//String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-03.m3u8";
-            	// 华视HD
-            	// String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-04.m3u8";
-            	//公视HD
-            	// String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-05.m3u8";
-            	//民视新闻台HD
-            	// String url = "http://60.250.71.253:8134/hls-live/livepkgr/_definst_/liveevent/STB-06.m3u8";
-            	
-            	String url = "http://199.195.195.108:32001";
-            	
-            	Uri uri = Uri.parse(url);
-            	
-            	videoView.setVideoURI(uri);	
-            	videoView.requestFocus();
-            	videoView.start();  
+            if (arg0 == btnPlay) {            	
+            	/* 处理UI */
             	btnPlay.setVisibility(View.GONE);
-            	btnPause.setVisibility(View.VISIBLE);
-            	progressBar.show();
+            	//btnStop.setVisibility(View.GONE);
+            	//seekBar.setVisibility(View.GONE);
+            	btnPause.setVisibility(View.VISIBLE);            	
             }
             else if (arg0 == btnPause) 
             {
@@ -116,6 +124,9 @@ public class VideoPlayer extends Activity{
             else if (arg0 == btnStop) 
             {
             	videoView.stopPlayback();
+            	btnPause.setVisibility(View.GONE);
+            	btnPlay.setVisibility(View.VISIBLE);
+            	seekBar.setProgress(0);
             }
         }		
 	}  
@@ -172,7 +183,7 @@ public class VideoPlayer extends Activity{
         	case REFRESH_PROGRESSBAR: 
         		s_KB = (Long) msg.obj;
         		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+s_KB);
-        		progressBar.setMessage("视频加载中("+s_KB+"K/S)...");
+        		progressBar.setMessage("视频加载中(" + s_KB + "K/S)...");
         		break;
         	case DISMISS_PROGRESSBAR:
         		System.out.println("dismiss");
